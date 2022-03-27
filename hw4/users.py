@@ -1,6 +1,5 @@
 """Group Members: Matt Moore, Adrian Abeyta, Ahmad Moltafet
 """
-
 import queue
 import logging
 from datetime import date, datetime
@@ -40,7 +39,6 @@ class UserList(list):
         self.__mongo_db = self.__mongo_client.detest
         self.__mongo_collection = self.__mongo_db.users    
         if self.__restore() is True:
-#            raise Exception('No name and no document to restore')
             self.__dirty = False
         else:
             self.__name = list_name

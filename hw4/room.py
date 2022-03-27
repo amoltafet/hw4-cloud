@@ -1,6 +1,7 @@
 """Group Members: Matt Moore, Adrian Abeyta, Ahmad Moltafet
 """
 
+from msilib import sequence
 import re
 import pika
 import json
@@ -164,12 +165,12 @@ class RoomList():
         """ Try to restore from mongo 
         """
         logging.info(f'Initializing RoomList')
-        self.__name = name
+        self.room_name = name
         self.__mongo_client = MongoClient(host=MONGODB_URL, port=MONGODB_PORT, username=MONGODB_USER, password=MONGODB_PASS, authSource=MONGO_DB, authMechanism=MONGODB_AUTH_SOURCE_CLASS)
         self.__mongo_db = self.__mongo_client.detest
-        self.__mongo_collection = self.__mongo_db.get_collection(self.__name)
+        self.__mongo_collection = self.__mongo_db.get_collection(self.room_name)
         if self.__mongo_collection is None:
-            self.__mongo_collection = self.__mongo_db.create_collection(self.__name)
+            self.__mongo_collection = self.__mongo_db.create_collection(self.room_name)
         self.__room_list = []
         self.__room_list_dict = {}
         self.__dirty = True    
@@ -240,8 +241,24 @@ class RoomList():
         """ Restore the list from mongo
         """
         logging.info(f'Entrered __restore in RoomList')
-        self.__room_list = self.__mongo_collection.find_one()
-        if self.__room_list is None:
-            return False
-        else:
-            return True
+        self.__mongo_collection.find_one_and_update(
+            {'_id': 'userid'},
+            {'$inc': {self.room_name: 1}},
+            projection={self.room_name: True, '_id': False},
+            upsert=True,
+            return_document=ReturnDocument.AFTER
+            )
+        return True
+
+    def __get_next_sequence_num(self):
+        """ Get the next sequence number
+        """
+        logging.info(f'Entrered __get_next_sequence_num in RoomList')
+        sequence_num = self.__mongo_collection.find_one_and_update(
+            {'_id': 'userid'},
+            {'$inc': {self.room_name: 1}},
+            projection={self.room_name: True, '_id': False},
+            upsert=True,
+            return_document=ReturnDocument.AFTER
+            )
+        return sequence_num

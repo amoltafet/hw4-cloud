@@ -25,8 +25,6 @@ class RoomTest(TestCase):
         """ Testing the send message functionality
         """
         logging.info(f'Starting test_send')
-        #self.__curr_room.restore()
-        # Test that messages send on scale
         for test_instance in range(3):
             assert self.__cur_room.send_message(private_message, SENDER_NAME, self.__cur_message) == True
             assert self.__cur_room.send_message(public_message, SENDER_NAME, self.__cur_message) == True
@@ -37,13 +35,11 @@ class RoomTest(TestCase):
         """
         logging.info(f'Starting test_get')
         # No messages so we should
-        #self.__cur_message.restore() 
         print(self.__cur_room.get_messages(GET_ALL_MESSAGES))
     
         self.__cur_room.send_message("private_message", SENDER_NAME, self.__cur_message)
         self.__cur_room.send_message("public_message", SENDER_NAME, self.__cur_message)
         assert self.__cur_room.get_messages(GET_ALL_MESSAGES) != []
-        # Testing with some messages 
         logging.info(f'Exiting test_get')
         
 
@@ -51,8 +47,6 @@ class RoomTest(TestCase):
         """ Doing both and make sure that what we sent is in what we get back
         """
         logging.info(f'Starting test_full')
-        #self.__curr_room.restore()
-        # Send messages first
         message_solutions = [DEFAULT_PRIVATE_TEST_MESS,DEFAULT_PUBLIC_TEST_MESS]
         self.__cur_room.send_message(DEFAULT_PRIVATE_TEST_MESS, SENDER_NAME, self.__cur_message) == True
         self.__cur_room.send_message(DEFAULT_PUBLIC_TEST_MESS, SENDER_NAME,self.__cur_message) == True

@@ -113,7 +113,7 @@ async def create_room(room_name: str, owner_alias: str, room_type: int = ROOM_TY
     """ API for creating a room
     """
     logging.info("starting room method")
-    if (room_name := room_list.add_room(room_name, owner_alias, room_type)) is None:
+    if (room_name := room_list.add(room_name, owner_alias, room_type)) is None:
         return JSONResponse(status_code=415, content=f'Room {room_name} already exists.')
     logging.info(f"room_name: {room_name}")
     return JSONResponse(status_code=200, content=room_name)
